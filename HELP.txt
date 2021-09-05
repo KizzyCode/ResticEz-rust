@@ -1,0 +1,23 @@
+Usage: restic-ez [verb]
+
+Possible verbs are:
+    create      Creates a new archive
+    list        Lists the existing archives
+    restore     Restores the latest archiv tagged with \"backup\"
+    tmux        Opens a tmux session configured for easy manual restic invocation
+    check       Checks the repository for consistency
+    prune       Removes all unused chunks from the repository
+    break-lock  Breaks a stale lock
+    help        Displays this help
+
+Specify the configuration using environment variables:
+    RESTIC_EZ_CONFIG_TOML  Specifies the raw configuration toml string
+    RESTIC_EZ_CONFIG       Specifies a custom path to a configuration file
+
+Per default, restic-ez looks for the following config files:
+    ./restic-ez
+    ./restic-ez.conf
+    ./restic-ez.toml
+    ./.restic-ez
+    ./.restic-ez.conf
+    ./.restic-ez.toml
