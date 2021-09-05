@@ -4,7 +4,7 @@
 [![docs.rs](https://docs.rs/restic_ez/badge.svg)](https://docs.rs/restic_ez)
 [![crates.io](https://img.shields.io/crates/v/restic_ez.svg)](https://crates.io/crates/restic_ez)
 [![Download numbers](https://img.shields.io/crates/d/restic_ez.svg)](https://crates.io/crates/restic_ez)
-[![dependency status](https://deps.rs/crate/restic_ez/0.1.0/status.svg)](https://deps.rs/crate/restic_ez/0.1.0)
+[![dependency status](https://deps.rs/crate/restic_ez/0.1.3/status.svg)](https://deps.rs/crate/restic_ez/0.1.3)
 
 
 # `restic-ez`
