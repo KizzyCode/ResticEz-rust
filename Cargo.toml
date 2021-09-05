@@ -1,13 +1,13 @@
 [package]
 name = "restic_ez"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2018"
 authors = ["KizzyCode Software Labs./Keziah Biermann <development@kizzycode.de>"]
 keywords = []
 categories = []
 description = "This crate provides a simple configuration loader and API around `restic`"
 license = "BSD-2-Clause OR MIT"
-repository = "https://github.com/KizzyCode/restic_ez-rust"
+repository = "https://github.com/KizzyCode/ResticEz-rust"
 readme = "README.md"
 
 
@@ -17,8 +17,8 @@ path = "src/main.rs"
 
 
 [badges]
-travis-ci = { repository = "KizzyCode/restic_ez-rust" }
-appveyor = { repository = "KizzyCode/restic_ez-rust" }
+travis-ci = { repository = "KizzyCode/ResticEz-rust" }
+appveyor = { repository = "KizzyCode/ResticEz-rust" }
 
 
 [dependencies]
