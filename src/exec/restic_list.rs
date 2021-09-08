@@ -12,6 +12,7 @@ pub struct ResticListArchive {
     /// The name of the host who creates the archive
     pub hostname: String,
     /// The tags associated with the archive
+    #[serde(default)]
     pub tags: Vec<String>,
     /// The ID of the archive
     pub id: String,

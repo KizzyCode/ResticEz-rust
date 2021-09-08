@@ -25,10 +25,11 @@ pub struct Credentials {
 
 
 /// The raw restic flags to pass during invocation
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Flags {
     /// The flags to pass during invocation of `restic backup ...`
-    pub backup: Option<Vec<String>>
+    #[serde(default)]
+    pub backup: Vec<String>
 }
 /// The restic configuration
 #[derive(Debug, Serialize, Deserialize)]
@@ -38,9 +39,11 @@ pub struct Restic {
     /// The repository URL
     pub repo: String,
     /// Whether to perform a snapshot before restoring or not
+    #[serde(default)]
     pub safe_restore: bool,
     /// The raw restic flags to pass during invocation
-    pub flags: Option<Flags>,
+    #[serde(default)]
+    pub flags: Flags,
 }
 
 
