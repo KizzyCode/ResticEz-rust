@@ -42,6 +42,7 @@ impl ResticList {
     /// Lists the repository archives
     pub fn exec(self) -> Result<ResticListOutput> {
         let output_json = self.exec.exec_stringout()?;
-        serde_json::from_str(&output_json).map_err(|e| einval!("Unexpected JSON output from `restic` command ({})", e))
+        serde_json::from_str(&output_json)
+            .map_err(|e| einval!("Unexpected JSON output from `restic` command ({})", e))
     }
 }
