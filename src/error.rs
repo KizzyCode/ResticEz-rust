@@ -51,6 +51,11 @@ impl From<io::Error> for ErrorImpl<ErrorKind> {
         ErrorImpl::with_string(ErrorKind::InOutError, underlying)
     }
 }
+impl From<ezexec::error::Error> for ErrorImpl<ErrorKind> {
+    fn from(underlying: ezexec::error::Error) -> Self {
+        Self::with_string(ErrorKind::ExecError, underlying)
+    }
+}
 
 
 /// A nice typealias for a `Result` with our custom error

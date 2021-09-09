@@ -11,11 +11,7 @@ pub fn dir_exists<P>(dir: P) -> Result<bool> where P: AsRef<Path> {
 
 /// Checks whether a directory exists or not
 pub fn dir_is_empty<P>(dir: P) -> Result<bool> where P: AsRef<Path> {
-    for entry in fs::read_dir(dir)? {
-        let _entry = entry?;
-        return Ok(false)
-    }
-    Ok(true)
+    Ok(fs::read_dir(dir)?.next().is_none())
 }
 /// Removes all files within a given directory (but not the directory itself)
 pub fn clear_dir<P>(dir: P) -> Result where P: AsRef<Path> {

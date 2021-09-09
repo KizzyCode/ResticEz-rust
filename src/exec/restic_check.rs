@@ -1,17 +1,17 @@
-use crate::{ config::Config, error::Result, exec::GenericExecutable };
+use crate::{ config::Config, error::Result };
+use ezexec::ExecBuilder;
 
 
 /// Checks the repository consistency
 #[derive(Debug)]
 pub struct ResticCheck {
     /// The underlying generic executable
-    exec: GenericExecutable
+    exec: ExecBuilder
 }
 impl ResticCheck {
     /// Creates a command to check the repository consistency
     pub fn new(config: &Config) -> Result<Self> {
-        let restic = GenericExecutable::find("restic")?;
-        let mut exec = GenericExecutable::new(restic, ["check", "--read-data"]);
+        let mut exec = ExecBuilder::with_name("restic", ["check", "--read-data"])?;
         exec.set_envs(config.to_env()?);
 
         Ok(Self { exec })
@@ -19,6 +19,6 @@ impl ResticCheck {
     
     /// Checks the repository consistency
     pub fn exec(self) -> Result {
-        self.exec.exec()
+        Ok(self.exec.spawn_transparent()?.wait()?)
     }
 }

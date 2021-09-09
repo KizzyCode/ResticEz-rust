@@ -4,13 +4,13 @@
 [![docs.rs](https://docs.rs/restic_ez/badge.svg)](https://docs.rs/restic_ez)
 [![crates.io](https://img.shields.io/crates/v/restic_ez.svg)](https://crates.io/crates/restic_ez)
 [![Download numbers](https://img.shields.io/crates/d/restic_ez.svg)](https://crates.io/crates/restic_ez)
-[![dependency status](https://deps.rs/crate/restic_ez/0.1.3/status.svg)](https://deps.rs/crate/restic_ez/0.1.3)
+[![dependency status](https://deps.rs/crate/restic_ez/0.1.5/status.svg)](https://deps.rs/crate/restic_ez/0.1.5)
 
 
 # `restic-ez`
 Welcome to `restic-ez` 🎉
 
-`restic-ez` provides a simple configuration loader and API around `restic`.
+`restic-ez` provides a simple configuration loader and CLI-API around `restic`.
 
 
 ## Configuration example

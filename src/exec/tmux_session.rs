@@ -1,18 +1,18 @@
-use crate::{ config::Config, error::Result, exec::GenericExecutable };
+use crate::{ config::Config, error::Result };
+use ezexec::ExecBuilder;
 
 
 /// Opens a `tmux` session with the given environment set
 #[derive(Debug)]
 pub struct TmuxSession {
     /// The underlying raw command
-    exec: GenericExecutable
+    exec: ExecBuilder
 }
 impl TmuxSession {
     /// Creates a new `tmux` session with `config` as environment
     pub fn new(config: &Config) -> Result<Self> {
         // Create the tmux command
-        let tmux = GenericExecutable::find("tmux")?;
-        let mut exec = GenericExecutable::new(tmux, Vec::<String>::new());
+        let mut exec = ExecBuilder::with_name("tmux", Vec::<String>::new())?;
         exec.set_envs(config.to_env()?);
 
         Ok(Self { exec })
@@ -20,6 +20,6 @@ impl TmuxSession {
     
     /// Starts tmux
     pub fn exec(self) -> Result {
-        self.exec.exec()
+        Ok(self.exec.spawn_transparent()?.wait()?)
     }
 }

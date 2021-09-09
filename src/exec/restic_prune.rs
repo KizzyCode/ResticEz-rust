@@ -1,17 +1,17 @@
-use crate::{ config::Config, error::Result, exec::GenericExecutable };
+use crate::{ config::Config, error::Result };
+use ezexec::ExecBuilder;
 
 
 /// Prunes all unused chunks from the repository
 #[derive(Debug)]
 pub struct ResticPrune {
     /// The underlying generic executable
-    exec: GenericExecutable
+    exec: ExecBuilder
 }
 impl ResticPrune {
     /// Creates a command to prune all unused chunks from the repository
     pub fn new(config: &Config) -> Result<Self> {
-        let restic = GenericExecutable::find("restic")?;
-        let mut exec = GenericExecutable::new(restic, ["prune"]);
+        let mut exec = ExecBuilder::with_name("restic", ["prune"])?;
         exec.set_envs(config.to_env()?);
 
         Ok(Self { exec })
@@ -19,6 +19,6 @@ impl ResticPrune {
     
     /// Prunes all unused chunks from the repository
     pub fn exec(self) -> Result {
-        self.exec.exec()
+        Ok(self.exec.spawn_transparent()?.wait()?)
     }
 }
