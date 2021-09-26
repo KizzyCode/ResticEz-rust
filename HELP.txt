@@ -4,7 +4,7 @@ Possible verbs are:
     create      Creates a new archive
     list        Lists the existing archives
     restore     Restores the latest archiv tagged with \"backup\"
-    tmux        Opens a tmux session configured for easy manual restic invocation
+    shell       Opens a shell session configured for easy manual restic invocation
     check       Checks the repository for consistency
     prune       Removes all unused chunks from the repository
     break-lock  Breaks a stale lock

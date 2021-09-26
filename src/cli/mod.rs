@@ -5,13 +5,13 @@ pub mod help;
 pub mod list;
 pub mod prune;
 pub mod restore;
-pub mod tmux;
+pub mod shell;
 
 use crate::{
     config::Config, error::Result, exec::dialog_choice::DialogChoice,
     cli::{
         break_lock::BreakLock, check::Check, create::Create, help::Help,
-        list::List, prune::Prune, restore::Restore, tmux::Tmux
+        list::List, prune::Prune, restore::Restore, shell::Shell
     }
 };
 use std::env;
@@ -39,7 +39,7 @@ impl CliCommand {
                 ("create", "Creates a new archive"),
                 ("list", "Lists the existing archives"),
                 ("restore", "Restores the latest archiv tagged with \"backup\""),
-                ("tmux", "Opens a tmux session configured for easy manual restic invocation"),
+                ("shell", "Opens a shell session configured for easy manual restic invocation"),
                 ("check", "Checks the repository for consistency"),
                 ("prune", "Removes all unused chunks from the repository"),
                 ("break-lock", "Breaks a stale lock")
@@ -55,7 +55,7 @@ impl CliCommand {
             "list" | "ls" => List::new(self.config).exec(),
             "prune" => Prune::new(self.config).exec(),
             "restore" => Restore::new(self.config).exec(),
-            "tmux" | "shell" | "sh" => Tmux::new(self.config).exec(),
+            "shell" | "sh" => Shell::new(self.config).exec(),
             "help" => Ok(Help::new().display()),
             verb => {
                 Help::new().display();

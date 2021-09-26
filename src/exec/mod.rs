@@ -8,5 +8,5 @@ pub mod restic_create;
 pub mod restic_list;
 pub mod restic_restore;
 pub mod restic_prune;
-pub mod tmux_session;
+pub mod shell_session;
 pub mod shell_command;
