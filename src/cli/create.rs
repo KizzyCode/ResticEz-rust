@@ -18,6 +18,6 @@ impl Create {
     /// Executes the command
     pub fn exec(self) -> Result {
         DialogInfo::new("Creating backup...")?.exec()?;
-        ResticCreate::new(&self.config, ["backup"])?.exec()
+        ResticCreate::new(&self.config, &["backup"])?.exec()
     }
 }

@@ -10,12 +10,12 @@ pub struct ResticCreate {
 }
 impl ResticCreate {
     /// Creates a command to create a new backup/snapshot
-    pub fn new<S, I>(config: &Config, tags: I) -> Result<Self> where I: IntoIterator<Item = S>, S: ToString {
+    pub fn new<S>(config: &Config, tags: &[S]) -> Result<Self> where S: AsRef<str> {
         // Create the executable flags
-        let tags = tags.into_iter().map(|a| a.to_string()).collect::<Vec<_>>().join(",");
-        let args = vec!["backup", "--tag", &tags].into_iter()
+        let args = vec!["backup"].into_iter()
+            .chain(tags.iter().flat_map(|t| ["--tag", t.as_ref()]))
             .chain(config.restic.flags.backup.iter().map(|f| f.as_str()))
-            .chain(vec![config.restic.dir.as_str()]);
+            .chain(config.restic.dirs.iter().map(|d| d.as_str()));
 
         // Create the executable
         let mut exec = ExecBuilder::with_name("restic", args)?;

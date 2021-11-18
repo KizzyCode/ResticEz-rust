@@ -10,15 +10,15 @@ pub struct ResticRestore {
 }
 impl ResticRestore {
     /// Creates a command to restore the latest snapshot with the given tags
-    pub fn new<S, I>(config: &Config, tags: I) -> Result<Self> where I: IntoIterator<Item = S>, S: ToString {        
+    pub fn new<S>(config: &Config, tags: &[S]) -> Result<Self> where S: AsRef<str> {        
+        // Create the executable flags
+        let args = vec!["restore", "latest", "--target", "/"].into_iter()
+            .chain(tags.iter().flat_map(|t| ["--tag", t.as_ref()]))
+            .chain(config.restic.dirs.iter().flat_map(|d| ["--path", d.as_str()]));
+        
         // Create the executable
-        let tags = tags.into_iter().map(|a| a.to_string()).collect::<Vec<_>>().join(",");
-        let mut exec = ExecBuilder::with_name("restic", [
-            "restore", "latest", "--target", "/",
-            "--tag", &tags, "--path", &config.restic.dir
-        ])?;
+        let mut exec = ExecBuilder::with_name("restic", args)?;
         exec.set_envs(config.to_env()?);
-
         Ok(Self { exec })
     }
     

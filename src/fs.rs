@@ -9,6 +9,13 @@ pub fn dir_exists<P>(dir: P) -> Result<bool> where P: AsRef<Path> {
 }
 
 
+/// Create a directory if it does not exist
+pub fn dir_create<P>(dir: P) -> Result where P: AsRef<Path> {
+    fs::create_dir_all(dir)?;
+    Ok(())
+}
+
+
 /// Checks whether a directory exists or not
 pub fn dir_is_empty<P>(dir: P) -> Result<bool> where P: AsRef<Path> {
     Ok(fs::read_dir(dir)?.next().is_none())

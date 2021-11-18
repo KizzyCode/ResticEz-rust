@@ -34,8 +34,8 @@ pub struct Flags {
 /// The restic configuration
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Restic {
-    /// The managed directory
-    pub dir: String,
+    /// The managed directories
+    pub dirs: Vec<String>,
     /// The repository URL
     pub repo: String,
     /// Whether to perform a snapshot before restoring or not
@@ -67,7 +67,6 @@ impl Config {
     pub fn to_env(&self) -> Result<Vec<(&'static str, String)>> {
         // The basic config
         let mut env = vec![
-            ("DIRECTORY", self.restic.dir.clone()),
             ("RESTIC_REPOSITORY", self.restic.repo.clone()),
             ("RESTIC_PASSWORD", self.credentials.restic.eval()?)
         ];
