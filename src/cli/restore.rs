@@ -47,9 +47,8 @@ impl Restore {
             )?.exec()?;
         }
 
-        // Prepare the target dirs for restoration
+        // Remove all contents from the target directories
         for dir in self.config.restic.dirs.iter() {
-            // Remove all contents from the target directories
             if fs::dir_exists(dir)? && !fs::dir_is_empty(dir)? {
                 DialogInfo::new(format!("Deleting everything within {}...", dir))?.exec()?;
                 fs::clear_dir(dir)?;
