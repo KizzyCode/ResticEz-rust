@@ -1,6 +1,6 @@
 [package]
 name = "restic_ez"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2024"
 authors = ["KizzyCode Software Labs./Keziah Biermann <development@kizzycode.de>"]
 keywords = []
@@ -23,7 +23,7 @@ appveyor = { repository = "KizzyCode/ResticEz-rust" }
 
 [dependencies]
 serde = { version = "1.0", default-features = false, features = ["derive", "std"] }
-serde_json = { version = "1.0.148", default-features = false, features = ["std"] }
+serde_json = { version = "1.0", default-features = false, features = ["std"] }
 toml = { version = "0.9", default-features = false, features = ["parse", "serde", "std"] }
 
 
