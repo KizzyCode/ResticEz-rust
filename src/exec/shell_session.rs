@@ -1,12 +1,13 @@
-use crate::{ config::Config, error::Result };
-use ezexec::{ ExecBuilder, lookup::Shell };
-
+use crate::config::Config;
+use crate::error::Result;
+use ezexec::lookup::Shell;
+use ezexec::ExecBuilder;
 
 /// Opens a `shell` session with the given environment set
 #[derive(Debug)]
 pub struct ShellSession {
     /// The underlying raw command
-    exec: ExecBuilder
+    exec: ExecBuilder,
 }
 impl ShellSession {
     /// Creates a new `shell` session with `config` as environment
@@ -18,7 +19,7 @@ impl ShellSession {
 
         Ok(Self { exec })
     }
-    
+
     /// Creates the shell session
     pub fn exec(self) -> Result {
         eprintln!();

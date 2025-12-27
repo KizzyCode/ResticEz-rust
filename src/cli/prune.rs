@@ -1,13 +1,12 @@
-use crate::{
-    config::Config, error::Result,
-    exec::{ dialog_info::DialogInfo, restic_prune::ResticPrune }
-};
-
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::dialog_info::DialogInfo;
+use crate::exec::restic_prune::ResticPrune;
 
 /// Prunes all unused chunks from the repository
 pub struct Prune {
     /// The config
-    config: Config
+    config: Config,
 }
 impl Prune {
     /// Creates a command to prune all unused chunks from the repository

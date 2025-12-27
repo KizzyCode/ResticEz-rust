@@ -1,40 +1,52 @@
 use crate::error::Result;
-use std::{ fs, path::Path };
-
+use std::fs;
+use std::path::Path;
 
 /// Checks whether a directory exists or not
-pub fn dir_exists<P>(dir: P) -> Result<bool> where P: AsRef<Path> {
+pub fn dir_exists<P>(dir: P) -> Result<bool>
+where
+    P: AsRef<Path>,
+{
     let dir = dir.as_ref();
     Ok(dir.is_dir())
 }
 
-
 /// Create a directory if it does not exist
-pub fn dir_create<P>(dir: P) -> Result where P: AsRef<Path> {
+pub fn dir_create<P>(dir: P) -> Result
+where
+    P: AsRef<Path>,
+{
     fs::create_dir_all(dir)?;
     Ok(())
 }
 
-
 /// Checks whether a directory exists or not
-pub fn dir_is_empty<P>(dir: P) -> Result<bool> where P: AsRef<Path> {
+pub fn dir_is_empty<P>(dir: P) -> Result<bool>
+where
+    P: AsRef<Path>,
+{
     Ok(fs::read_dir(dir)?.next().is_none())
 }
 /// Removes all files within a given directory (but not the directory itself)
-pub fn clear_dir<P>(dir: P) -> Result where P: AsRef<Path> {
+pub fn clear_dir<P>(dir: P) -> Result
+where
+    P: AsRef<Path>,
+{
     for entry in fs::read_dir(&dir)? {
         let entry = entry?;
         match entry.file_type()?.is_dir() {
             true => fs::remove_dir_all(entry.path())?,
-            false => fs::remove_file(entry.path())?
+            false => fs::remove_file(entry.path())?,
         }
     }
     Ok(())
 }
 
-
 /// Reads a string from a file
-pub fn read_string<P>(path: P) -> Result<String> where P: AsRef<Path> {
+pub fn read_string<P>(path: P) -> Result<String>
+where
+    P: AsRef<Path>,
+{
     let bytes = fs::read(path)?;
     String::from_utf8(bytes).map_err(|e| einval!("Non-UTF-8 bytes in string ({})", e))
 }

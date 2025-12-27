@@ -1,10 +1,8 @@
-use crate::{
-    error::Result,
-    exec::{ dialog_creds::DialogCreds, shell_command::ShellCommand }
-};
-use serde::{ Serialize, Deserialize };
+use crate::error::Result;
+use crate::exec::dialog_creds::DialogCreds;
+use crate::exec::shell_command::ShellCommand;
+use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
-
 
 /// A dynamically sourced argument
 #[derive(Debug, Serialize, Deserialize)]
@@ -17,7 +15,7 @@ pub struct DynamicArgument {
     pub message: Option<String>,
     /// The cached value
     #[serde(skip)]
-    cached: RefCell<Option<String>>
+    cached: RefCell<Option<String>>,
 }
 impl DynamicArgument {
     /// Evaluates the argument and gets the value
@@ -29,23 +27,22 @@ impl DynamicArgument {
         }
 
         // Get the cached value
-        let cached = self.cached.borrow().clone()
-            .expect("Failed to get cached value?!");
+        let cached = self.cached.borrow().clone().expect("Failed to get cached value?!");
         Ok(cached)
     }
     /// Evaluates the argument and gets the value
     fn _eval(&self) -> Result<String> {
         if let Some(value) = self.value.to_owned() {
-            return Ok(value)
+            return Ok(value);
         }
         if let Some(command) = self.command.as_ref() {
             let shell = ShellCommand::new(command)?;
             let shell_out = shell.exec_stringout()?;
-            return Ok(shell_out.trim().to_string())
+            return Ok(shell_out.trim().to_string());
         }
         if let Some(message) = self.message.as_ref() {
             let dialog = DialogCreds::new(message)?;
-            return Ok(dialog.exec()?)
+            return Ok(dialog.exec()?);
         }
         Err(einval!("Cannot evaluate unconfigured dynamic argument"))
     }

@@ -1,12 +1,14 @@
-#[macro_use] mod error;
+#[macro_use]
+mod error;
 mod cli;
 mod config;
 mod exec;
 mod fs;
 
-use crate::{ cli::CliCommand, config::Config, error::Result };
-use std::{ env, process };
-
+use crate::cli::CliCommand;
+use crate::config::Config;
+use crate::error::Result;
+use std::{env, process};
 
 /// Gathers the config
 fn gather_config() -> Result<String> {
@@ -41,7 +43,6 @@ fn gather_config() -> Result<String> {
     // No config available
     Err(eio!("Failed to locate a valid config"))
 }
-
 
 /// Main entry point
 fn main() {

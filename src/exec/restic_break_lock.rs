@@ -1,12 +1,12 @@
-use crate::{ config::Config, error::Result };
+use crate::config::Config;
+use crate::error::Result;
 use ezexec::ExecBuilder;
-
 
 /// Removes a stale lock on a restic repository
 #[derive(Debug)]
 pub struct ResticBreakLock {
     /// The underlying generic executable
-    exec: ExecBuilder
+    exec: ExecBuilder,
 }
 impl ResticBreakLock {
     /// Creates a command to remove a stale lock on a restic repository
@@ -16,7 +16,7 @@ impl ResticBreakLock {
 
         Ok(Self { exec })
     }
-    
+
     /// Removes a stale lock on the restic repository
     pub fn exec(self) -> Result {
         Ok(self.exec.spawn_transparent()?.wait()?)

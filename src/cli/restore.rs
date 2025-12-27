@@ -1,16 +1,15 @@
-use crate::{
-    fs, config::Config, error::Result,
-    exec::{
-        dialog_info::DialogInfo, dialog_confirm::DialogConfirm,
-        restic_create::ResticCreate, restic_restore::ResticRestore
-    }
-};
-
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::dialog_confirm::DialogConfirm;
+use crate::exec::dialog_info::DialogInfo;
+use crate::exec::restic_create::ResticCreate;
+use crate::exec::restic_restore::ResticRestore;
+use crate::fs;
 
 /// Restores the latest archive which contains both tag "backup" and the managed path from the configuration
 pub struct Restore {
     /// The config
-    config: Config
+    config: Config,
 }
 impl Restore {
     /// Creates a command to push a new backup
@@ -43,8 +42,10 @@ impl Restore {
             let dirs = self.config.restic.dirs.join("\n");
             DialogConfirm::new(
                 format!("Really delete everything within the following directories before restoration?\n\n{}", dirs),
-                "Delete everything and restore", "Cancel"
-            )?.exec()?;
+                "Delete everything and restore",
+                "Cancel",
+            )?
+            .exec()?;
         }
 
         // Remove all contents from the target directories

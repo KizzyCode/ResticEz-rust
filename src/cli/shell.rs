@@ -1,10 +1,11 @@
-use crate::{ config::Config, error::Result, exec::shell_session::ShellSession };
-
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::shell_session::ShellSession;
 
 /// Creaxtes a new shell session with the restic config copied to env
 pub struct Shell {
     /// The config
-    config: Config
+    config: Config,
 }
 impl Shell {
     /// Creates a shell session with the restic config copied to env

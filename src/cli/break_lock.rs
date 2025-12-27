@@ -1,13 +1,13 @@
-use crate::{
-    config::Config, error::Result,
-    exec::{ dialog_confirm::DialogConfirm, dialog_info::DialogInfo, restic_break_lock::ResticBreakLock }
-};
-
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::dialog_confirm::DialogConfirm;
+use crate::exec::dialog_info::DialogInfo;
+use crate::exec::restic_break_lock::ResticBreakLock;
 
 /// Removes a stale lock on the restic repository
 pub struct BreakLock {
     /// The config
-    config: Config
+    config: Config,
 }
 impl BreakLock {
     /// Creates a command to remove a stale lock on the restic repository

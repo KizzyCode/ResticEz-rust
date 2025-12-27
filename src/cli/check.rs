@@ -1,13 +1,13 @@
-use crate::{
-    config::Config, error::Result,
-    exec::{ dialog_confirm::DialogConfirm, dialog_info::DialogInfo, restic_check::ResticCheck }
-};
-
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::dialog_confirm::DialogConfirm;
+use crate::exec::dialog_info::DialogInfo;
+use crate::exec::restic_check::ResticCheck;
 
 /// Checks the restic repository
 pub struct Check {
     /// The config
-    config: Config
+    config: Config,
 }
 impl Check {
     /// Creates a command to check the restic repository

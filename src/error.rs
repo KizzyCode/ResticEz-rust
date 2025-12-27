@@ -1,27 +1,27 @@
 use ebacktrace::define_error;
-use std::{
-    io, result,
-    fmt::{ self, Display, Formatter }
-};
-
+use std::fmt::{self, Display, Formatter};
+use std::{io, result};
 
 /// Creates a new variant
-#[macro_export] macro_rules! e {
+#[macro_export]
+macro_rules! e {
     ($kind:expr, $($arg:tt)*) => ({ $crate::error::ErrorImpl::with_string($kind, format!($($arg)*)) })
 }
 /// Creates a new `ErrorImpl::ExecError` kind
-#[macro_export] macro_rules! eexec {
+#[macro_export]
+macro_rules! eexec {
     ($($arg:tt)*) => ({ e!($crate::error::ErrorKind::ExecError, $($arg)*) });
 }
 /// Creates a new `ErrorImpl::InOutError` kind
-#[macro_export] macro_rules! eio {
+#[macro_export]
+macro_rules! eio {
     ($($arg:tt)*) => ({ e!($crate::error::ErrorKind::InOutError, $($arg)*) });
 }
 /// Creates a new `ErrorImpl::InvalidValue` kind
-#[macro_export] macro_rules! einval {
+#[macro_export]
+macro_rules! einval {
     ($($arg:tt)*) => ({ e!($crate::error::ErrorKind::InvalidValue, $($arg)*) });
 }
-
 
 /// The error kind
 #[derive(Debug)]
@@ -31,18 +31,17 @@ pub enum ErrorKind {
     /// An I/O-related error occurred
     InOutError,
     /// A value is invalid
-    InvalidValue
+    InvalidValue,
 }
 impl Display for ErrorKind {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
             Self::ExecError => write!(f, "Failed to execute a binary"),
             Self::InOutError => write!(f, "An I/O-error occurred"),
-            Self::InvalidValue => write!(f, "A value is invalid")
+            Self::InvalidValue => write!(f, "A value is invalid"),
         }
     }
 }
-
 
 // Define our custom error type
 define_error!(ErrorImpl);
@@ -56,7 +55,6 @@ impl From<ezexec::error::Error> for ErrorImpl<ErrorKind> {
         Self::with_string(ErrorKind::ExecError, underlying)
     }
 }
-
 
 /// A nice typealias for a `Result` with our custom error
 pub type Result<T = ()> = result::Result<T, ErrorImpl<ErrorKind>>;

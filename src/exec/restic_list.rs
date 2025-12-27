@@ -1,8 +1,8 @@
-use crate::{ config::Config, error::Result };
+use crate::config::Config;
+use crate::error::Result;
 use ezexec::ExecBuilder;
-use serde::{ Serialize, Deserialize };
+use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
-
 
 /// The info about a restic archive
 #[derive(Debug, Serialize, Deserialize)]
@@ -24,12 +24,11 @@ pub struct ResticListArchive {
 /// The restic list output
 pub type ResticListOutput = Vec<ResticListArchive>;
 
-
 /// A information dialog
 #[derive(Debug)]
 pub struct ResticList {
     /// The underlying generic executable
-    exec: ExecBuilder
+    exec: ExecBuilder,
 }
 impl ResticList {
     /// Creates a command to list the repository archives
@@ -39,11 +38,10 @@ impl ResticList {
 
         Ok(Self { exec })
     }
-    
+
     /// Lists the repository archives
     pub fn exec(self) -> Result<ResticListOutput> {
         let output_json: String = self.exec.spawn_captured()?.try_into()?;
-        serde_json::from_str(&output_json)
-            .map_err(|e| einval!("Unexpected JSON output from `restic` command ({})", e))
+        serde_json::from_str(&output_json).map_err(|e| einval!("Unexpected JSON output from `restic` command ({})", e))
     }
 }

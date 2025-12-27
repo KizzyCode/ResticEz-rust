@@ -1,13 +1,12 @@
-use crate::{
-    config::Config, error::Result,
-    exec::{ dialog_info::DialogInfo, restic_create::ResticCreate }
-};
-
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::dialog_info::DialogInfo;
+use crate::exec::restic_create::ResticCreate;
 
 /// Creates a new backup
 pub struct Create {
     /// The config
-    config: Config
+    config: Config,
 }
 impl Create {
     /// Creates a command to push a new backup

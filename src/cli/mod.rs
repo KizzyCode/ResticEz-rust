@@ -7,15 +7,18 @@ pub mod prune;
 pub mod restore;
 pub mod shell;
 
-use crate::{
-    config::Config, error::Result, exec::dialog_choice::DialogChoice,
-    cli::{
-        break_lock::BreakLock, check::Check, create::Create, help::Help,
-        list::List, prune::Prune, restore::Restore, shell::Shell
-    }
-};
+use crate::cli::break_lock::BreakLock;
+use crate::cli::check::Check;
+use crate::cli::create::Create;
+use crate::cli::help::Help;
+use crate::cli::list::List;
+use crate::cli::prune::Prune;
+use crate::cli::restore::Restore;
+use crate::cli::shell::Shell;
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::dialog_choice::DialogChoice;
 use std::env;
-
 
 /// A CLI command processor
 #[derive(Debug)]
@@ -23,7 +26,7 @@ pub struct CliCommand {
     /// The verb
     verb: Option<String>,
     /// The config
-    config: Config
+    config: Config,
 }
 impl CliCommand {
     /// Creates a new CLI command processor
@@ -42,7 +45,7 @@ impl CliCommand {
                 ("shell", "Opens a shell session configured for easy manual restic invocation"),
                 ("check", "Checks the repository for consistency"),
                 ("prune", "Removes all unused chunks from the repository"),
-                ("break-lock", "Breaks a stale lock")
+                ("break-lock", "Breaks a stale lock"),
             ];
             self.verb = Some(DialogChoice::new("Please select an action:", verbs)?.exec()?);
         }

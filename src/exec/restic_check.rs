@@ -1,12 +1,12 @@
-use crate::{ config::Config, error::Result };
+use crate::config::Config;
+use crate::error::Result;
 use ezexec::ExecBuilder;
-
 
 /// Checks the repository consistency
 #[derive(Debug)]
 pub struct ResticCheck {
     /// The underlying generic executable
-    exec: ExecBuilder
+    exec: ExecBuilder,
 }
 impl ResticCheck {
     /// Creates a command to check the repository consistency
@@ -16,7 +16,7 @@ impl ResticCheck {
 
         Ok(Self { exec })
     }
-    
+
     /// Checks the repository consistency
     pub fn exec(self) -> Result {
         Ok(self.exec.spawn_transparent()?.wait()?)

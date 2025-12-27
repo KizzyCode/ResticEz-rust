@@ -1,8 +1,7 @@
-use crate::{
-    config::Config, error::Result,
-    exec::{ dialog_info::DialogInfo, restic_list::ResticList }
-};
-
+use crate::config::Config;
+use crate::error::Result;
+use crate::exec::dialog_info::DialogInfo;
+use crate::exec::restic_list::ResticList;
 
 /// A table formatter
 #[derive(Debug, Clone)]
@@ -10,7 +9,7 @@ struct TableFormatter {
     /// The fields
     fields: Vec<String>,
     /// The amount of columns within the table
-    columns: usize
+    columns: usize,
 }
 impl TableFormatter {
     /// Creates a new table formatter
@@ -18,13 +17,17 @@ impl TableFormatter {
         Self { fields: Vec::new(), columns }
     }
     /// Pushes a row of fields to the table
-    pub fn push<I, F>(&mut self, row: I) -> Result where I: IntoIterator<Item = F>, F: ToString {
+    pub fn push<I, F>(&mut self, row: I) -> Result
+    where
+        I: IntoIterator<Item = F>,
+        F: ToString,
+    {
         // Validate the amount of fields
         let mut fields: Vec<_> = row.into_iter().map(|f| f.to_string()).collect();
         if fields.len() != self.columns {
             Err(einval!("Invalid amount of fields in row (expected {}; got {})", self.columns, fields.len()))?;
         }
-        
+
         // Append the fields
         self.fields.append(&mut fields);
         Ok(())
@@ -48,17 +51,13 @@ impl TableFormatter {
     }
     /// Get the length of the longest field of a given `column`
     fn column_max_len(&self, column: usize) -> usize {
-        self.fields.iter()
-            .skip(column).step_by(self.columns)
-            .map(|f| f.chars().count())
-            .max().unwrap_or_default()
+        self.fields.iter().skip(column).step_by(self.columns).map(|f| f.chars().count()).max().unwrap_or_default()
     }
     /// Right-pads each field for the given `column` to `max_len`
     fn column_rpad(&mut self, column: usize, max_len: usize) {
         // Create an iterator for the fields for the given column
-        let fields = self.fields.iter_mut()
-            .skip(column).step_by(self.columns);
-        
+        let fields = self.fields.iter_mut().skip(column).step_by(self.columns);
+
         // Pad each field
         for field in fields {
             let field_len = field.chars().count();
@@ -69,11 +68,10 @@ impl TableFormatter {
     }
 }
 
-
 /// Lists all archives
 pub struct List {
     /// The config
-    config: Config
+    config: Config,
 }
 impl List {
     /// Creates a command to list all archives
