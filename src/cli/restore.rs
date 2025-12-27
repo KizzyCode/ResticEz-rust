@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::dialog_confirm::DialogConfirm;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_create::ResticCreate;
@@ -18,7 +18,7 @@ impl Restore {
     }
 
     /// Executes the command
-    pub fn exec(self) -> Result {
+    pub fn exec(self) -> Result<(), Error> {
         // Check if one of the target directories exist
         let mut exists = false;
         for dir in self.config.restic.dirs.iter() {

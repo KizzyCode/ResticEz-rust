@@ -1,24 +1,26 @@
 use crate::config::Config;
-use crate::error::Result;
-use ezexec::ExecBuilder;
+use crate::error::Error;
+use crate::exec::CommandExt;
+use std::process::Command;
 
 /// Prunes all unused chunks from the repository
 #[derive(Debug)]
 pub struct ResticPrune {
     /// The underlying generic executable
-    exec: ExecBuilder,
+    command: Command,
 }
 impl ResticPrune {
     /// Creates a command to prune all unused chunks from the repository
-    pub fn new(config: &Config) -> Result<Self> {
-        let mut exec = ExecBuilder::with_name("restic", ["prune"])?;
-        exec.set_envs(config.to_env()?);
+    pub fn new(config: &Config) -> Result<Self, Error> {
+        let mut command = Command::new("restic");
+        command.arg("prune");
+        command.envs(config.to_env()?);
 
-        Ok(Self { exec })
+        Ok(Self { command })
     }
 
     /// Prunes all unused chunks from the repository
-    pub fn exec(self) -> Result {
-        Ok(self.exec.spawn_transparent()?.wait()?)
+    pub fn exec(mut self) -> Result<(), Error> {
+        self.command.exit0()
     }
 }

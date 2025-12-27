@@ -1,24 +1,26 @@
 use crate::config::Config;
-use crate::error::Result;
-use ezexec::ExecBuilder;
+use crate::error::Error;
+use crate::exec::CommandExt;
+use std::process::Command;
 
 /// Removes a stale lock on a restic repository
 #[derive(Debug)]
 pub struct ResticBreakLock {
     /// The underlying generic executable
-    exec: ExecBuilder,
+    command: Command,
 }
 impl ResticBreakLock {
     /// Creates a command to remove a stale lock on a restic repository
-    pub fn new(config: &Config) -> Result<Self> {
-        let mut exec = ExecBuilder::with_name("restic", ["unlock"])?;
-        exec.set_envs(config.to_env()?);
+    pub fn new(config: &Config) -> Result<Self, Error> {
+        let mut command = Command::new("restic");
+        command.arg("unlock");
+        command.envs(config.to_env()?);
 
-        Ok(Self { exec })
+        Ok(Self { command })
     }
 
     /// Removes a stale lock on the restic repository
-    pub fn exec(self) -> Result {
-        Ok(self.exec.spawn_transparent()?.wait()?)
+    pub fn exec(mut self) -> Result<(), Error> {
+        self.command.exit0()
     }
 }

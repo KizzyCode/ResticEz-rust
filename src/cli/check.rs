@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::dialog_confirm::DialogConfirm;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_check::ResticCheck;
@@ -16,7 +16,7 @@ impl Check {
     }
 
     /// Executes the command
-    pub fn exec(self) -> Result {
+    pub fn exec(self) -> Result<(), Error> {
         let message = "Do you really want to check the repository (this may take a very long time)?";
         DialogConfirm::new(message, "Check repository", "Cancel")?.exec()?;
         DialogInfo::new("Checking repository (this may take a very long time)...")?.exec()?;

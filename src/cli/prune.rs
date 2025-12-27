@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_prune::ResticPrune;
 
@@ -15,7 +15,7 @@ impl Prune {
     }
 
     /// Executes the command
-    pub fn exec(self) -> Result {
+    pub fn exec(self) -> Result<(), Error> {
         DialogInfo::new("Pruning unused chunks...")?.exec()?;
         ResticPrune::new(&self.config)?.exec()
     }

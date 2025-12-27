@@ -16,7 +16,7 @@ use crate::cli::prune::Prune;
 use crate::cli::restore::Restore;
 use crate::cli::shell::Shell;
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::dialog_choice::DialogChoice;
 use std::env;
 
@@ -35,7 +35,7 @@ impl CliCommand {
     }
 
     /// Executes the CLI command
-    pub fn exec(mut self) -> Result {
+    pub fn exec(mut self) -> Result<(), Error> {
         // Select the verb
         if self.verb.is_none() {
             let verbs = [

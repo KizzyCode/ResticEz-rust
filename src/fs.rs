@@ -1,9 +1,9 @@
-use crate::error::Result;
+use crate::error::Error;
 use std::fs;
 use std::path::Path;
 
 /// Checks whether a directory exists or not
-pub fn dir_exists<P>(dir: P) -> Result<bool>
+pub fn dir_exists<P>(dir: P) -> Result<bool, Error>
 where
     P: AsRef<Path>,
 {
@@ -12,7 +12,7 @@ where
 }
 
 /// Create a directory if it does not exist
-pub fn dir_create<P>(dir: P) -> Result
+pub fn dir_create<P>(dir: P) -> Result<(), Error>
 where
     P: AsRef<Path>,
 {
@@ -21,14 +21,14 @@ where
 }
 
 /// Checks whether a directory exists or not
-pub fn dir_is_empty<P>(dir: P) -> Result<bool>
+pub fn dir_is_empty<P>(dir: P) -> Result<bool, Error>
 where
     P: AsRef<Path>,
 {
     Ok(fs::read_dir(dir)?.next().is_none())
 }
 /// Removes all files within a given directory (but not the directory itself)
-pub fn clear_dir<P>(dir: P) -> Result
+pub fn clear_dir<P>(dir: P) -> Result<(), Error>
 where
     P: AsRef<Path>,
 {
@@ -43,7 +43,7 @@ where
 }
 
 /// Reads a string from a file
-pub fn read_string<P>(path: P) -> Result<String>
+pub fn read_string<P>(path: P) -> Result<String, Error>
 where
     P: AsRef<Path>,
 {

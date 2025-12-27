@@ -1,8 +1,8 @@
 mod dynamic_argument;
-use crate::error::Result;
+
+use crate::error::Error;
 pub use dynamic_argument::DynamicArgument;
 use serde::{Deserialize, Serialize};
-use std::fmt::{self, Display, Formatter};
 
 /// The S3 credentials
 #[derive(Debug, Serialize, Deserialize)]
@@ -53,7 +53,7 @@ pub struct Config {
 }
 impl Config {
     /// Loads the config
-    pub fn from_str<T>(config: T) -> Result<Self>
+    pub fn from_str<T>(config: T) -> Result<Self, Error>
     where
         T: AsRef<str>,
     {
@@ -62,7 +62,7 @@ impl Config {
     }
 
     /// Generates the environment set from the config
-    pub fn to_env(&self) -> Result<Vec<(&'static str, String)>> {
+    pub fn to_env(&self) -> Result<Vec<(&'static str, String)>, Error> {
         // The basic config
         let mut env =
             vec![("RESTIC_REPOSITORY", self.restic.repo.clone()), ("RESTIC_PASSWORD", self.credentials.restic.eval()?)];
@@ -73,11 +73,5 @@ impl Config {
             env.push(("AWS_SECRET_ACCESS_KEY", s3.secret.eval()?));
         }
         Ok(env)
-    }
-}
-impl Display for Config {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        let json = toml::to_string_pretty(self).expect("Failed to serialize config?!");
-        write!(f, "{}", json)
     }
 }

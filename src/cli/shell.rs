@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::shell_session::ShellSession;
 
 /// Creaxtes a new shell session with the restic config copied to env
@@ -14,7 +14,7 @@ impl Shell {
     }
 
     /// Starts the shell
-    pub fn exec(self) -> Result {
+    pub fn exec(self) -> Result<(), Error> {
         ShellSession::new(&self.config)?.exec()
     }
 }

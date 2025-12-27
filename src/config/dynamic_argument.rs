@@ -1,4 +1,4 @@
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::dialog_creds::DialogCreds;
 use crate::exec::shell_command::ShellCommand;
 use serde::{Deserialize, Serialize};
@@ -19,7 +19,7 @@ pub struct DynamicArgument {
 }
 impl DynamicArgument {
     /// Evaluates the argument and gets the value
-    pub fn eval(&self) -> Result<String> {
+    pub fn eval(&self) -> Result<String, Error> {
         // Populate the cache if not done yet
         if self.cached.borrow().is_none() {
             let value = self._eval()?;
@@ -31,13 +31,13 @@ impl DynamicArgument {
         Ok(cached)
     }
     /// Evaluates the argument and gets the value
-    fn _eval(&self) -> Result<String> {
+    fn _eval(&self) -> Result<String, Error> {
         if let Some(value) = self.value.to_owned() {
             return Ok(value);
         }
         if let Some(command) = self.command.as_ref() {
             let shell = ShellCommand::new(command)?;
-            let shell_out = shell.exec_stringout()?;
+            let shell_out = shell.exec()?;
             return Ok(shell_out.trim().to_string());
         }
         if let Some(message) = self.message.as_ref() {

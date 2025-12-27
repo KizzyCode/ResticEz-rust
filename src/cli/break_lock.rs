@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::dialog_confirm::DialogConfirm;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_break_lock::ResticBreakLock;
@@ -16,7 +16,7 @@ impl BreakLock {
     }
 
     /// Executes the command
-    pub fn exec(self) -> Result {
+    pub fn exec(self) -> Result<(), Error> {
         DialogConfirm::new("Do you really want to break any stale lock?", "Break lock", "Cancel")?.exec()?;
         DialogInfo::new("Breaking lock...")?.exec()?;
         ResticBreakLock::new(&self.config)?.exec()

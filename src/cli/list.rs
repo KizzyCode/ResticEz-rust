@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_list::ResticList;
 
@@ -17,7 +17,7 @@ impl TableFormatter {
         Self { fields: Vec::new(), columns }
     }
     /// Pushes a row of fields to the table
-    pub fn push<I, F>(&mut self, row: I) -> Result
+    pub fn push<I, F>(&mut self, row: I) -> Result<(), Error>
     where
         I: IntoIterator<Item = F>,
         F: ToString,
@@ -80,7 +80,7 @@ impl List {
     }
 
     /// Executes the command
-    pub fn exec(self) -> Result {
+    pub fn exec(self) -> Result<(), Error> {
         // Print the status info
         DialogInfo::new("Listing snapshots...")?.exec()?;
         println!();

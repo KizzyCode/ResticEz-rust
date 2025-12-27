@@ -1,40 +1,38 @@
-use crate::error::Result;
-use ezexec::ExecBuilder;
+use crate::error::Error;
+use crate::exec::CommandExt;
+use std::process::Command;
 
 /// A confirmation dialog
 #[derive(Debug)]
 pub struct DialogConfirm {
     /// The underlying generic executable
-    exec: ExecBuilder,
+    command: Command,
 }
 impl DialogConfirm {
     /// Creates a new confirmation dialog command
-    pub fn new<T, Y, N>(message: T, yes: Y, no: N) -> Result<Self>
+    pub fn new<T, Y, N>(message: T, yes: Y, no: N) -> Result<Self, Error>
     where
         T: AsRef<str>,
         Y: AsRef<str>,
         N: AsRef<str>,
     {
-        let exec = ExecBuilder::with_name(
-            "dialog",
-            [
-                "--clear",
-                "--defaultno",
-                "--yes-label",
-                yes.as_ref(),
-                "--no-label",
-                no.as_ref(),
-                "--yesno",
-                message.as_ref(),
-                "0",
-                "0",
-            ],
-        )?;
-        Ok(Self { exec })
+        let mut command = Command::new("dialog");
+        (command.arg("--clear"))
+            .arg("--defaultno")
+            .arg("--yes-label")
+            .arg(yes.as_ref())
+            .arg("--no-label")
+            .arg(no.as_ref())
+            .arg("--yesno")
+            .arg(message.as_ref())
+            .arg("0")
+            .arg("0");
+
+        Ok(Self { command })
     }
 
     /// Shows the confirmation dialog
-    pub fn exec(self) -> Result {
-        Ok(self.exec.spawn_transparent()?.wait()?)
+    pub fn exec(mut self) -> Result<(), Error> {
+        self.command.exit0()
     }
 }

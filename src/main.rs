@@ -1,3 +1,17 @@
+#![doc = include_str!("../README.md")]
+// Clippy lints
+#![warn(clippy::large_stack_arrays)]
+#![warn(clippy::arithmetic_side_effects)]
+#![warn(clippy::expect_used)]
+#![warn(clippy::unwrap_used)]
+#![warn(clippy::indexing_slicing)]
+#![warn(clippy::todo)]
+#![warn(clippy::unimplemented)]
+#![warn(clippy::missing_panics_doc)]
+#![warn(clippy::allow_attributes_without_reason)]
+#![warn(clippy::cognitive_complexity)]
+#![forbid(unsafe_code)]
+
 #[macro_use]
 mod error;
 mod cli;
@@ -7,11 +21,11 @@ mod fs;
 
 use crate::cli::CliCommand;
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::Error;
 use std::{env, process};
 
 /// Gathers the config
-fn gather_config() -> Result<String> {
+fn gather_config() -> Result<String, Error> {
     // Get the config from an environment variable
     if let Ok(config) = env::var("RESTIC_EZ_CONFIG_TOML") {
         return Ok(config);
@@ -47,7 +61,7 @@ fn gather_config() -> Result<String> {
 /// Main entry point
 fn main() {
     /// The real main function
-    fn _main() -> Result {
+    fn _main() -> Result<(), Error> {
         let config_string = gather_config()?;
         let config = Config::from_str(config_string)?;
         CliCommand::new(config).exec()

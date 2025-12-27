@@ -1,29 +1,29 @@
 use crate::config::Config;
-use crate::error::Result;
-use ezexec::lookup::Shell;
-use ezexec::ExecBuilder;
+use crate::error::Error;
+use crate::exec::{CommandExt, CommandOsExt};
+use std::process::Command;
 
 /// Opens a `shell` session with the given environment set
 #[derive(Debug)]
 pub struct ShellSession {
     /// The underlying raw command
-    exec: ExecBuilder,
+    command: Command,
 }
 impl ShellSession {
     /// Creates a new `shell` session with `config` as environment
-    pub fn new(config: &Config) -> Result<Self> {
-        // Create the shell command and define a PS1 string
-        let shell = Shell::find()?;
-        let mut exec = ExecBuilder::with_path(&shell, Vec::<String>::new())?;
-        exec.set_envs(config.to_env()?);
+    pub fn new(config: &Config) -> Result<Self, Error> {
+        // Create the shell command
+        let shell = Command::shell()?;
+        let mut command = Command::new(shell);
+        command.envs(config.to_env()?);
 
-        Ok(Self { exec })
+        Ok(Self { command })
     }
 
     /// Creates the shell session
-    pub fn exec(self) -> Result {
+    pub fn exec(mut self) -> Result<(), Error> {
         eprintln!();
         eprintln!("======= Spawning new subshell: =======");
-        Ok(self.exec.spawn_transparent()?.wait()?)
+        self.command.exit0()
     }
 }

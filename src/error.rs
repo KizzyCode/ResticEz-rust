@@ -1,11 +1,10 @@
-use ebacktrace::define_error;
+use std::backtrace::{Backtrace, BacktraceStatus};
 use std::fmt::{self, Display, Formatter};
-use std::{io, result};
 
 /// Creates a new variant
 #[macro_export]
 macro_rules! e {
-    ($kind:expr, $($arg:tt)*) => ({ $crate::error::ErrorImpl::with_string($kind, format!($($arg)*)) })
+    ($kind:expr, $($arg:tt)*) => ({ $crate::error::Error::new($kind, format!($($arg)*)) })
 }
 /// Creates a new `ErrorImpl::ExecError` kind
 #[macro_export]
@@ -44,17 +43,45 @@ impl Display for ErrorKind {
 }
 
 // Define our custom error type
-define_error!(ErrorImpl);
-impl From<io::Error> for ErrorImpl<ErrorKind> {
-    fn from(underlying: io::Error) -> Self {
-        ErrorImpl::with_string(ErrorKind::InOutError, underlying)
+#[derive(Debug)]
+pub struct Error {
+    /// The error kind
+    kind: ErrorKind,
+    /// The human readable error description
+    description: String,
+    /// The error backtrace
+    backtrace: Backtrace,
+}
+impl Error {
+    /// Creates a new error description
+    pub fn new<Description>(err: ErrorKind, description: Description) -> Self
+    where
+        Description: ToString,
+    {
+        let description = description.to_string();
+        let backtrace = Backtrace::capture();
+        Self { kind: err, description, backtrace }
     }
 }
-impl From<ezexec::error::Error> for ErrorImpl<ErrorKind> {
-    fn from(underlying: ezexec::error::Error) -> Self {
-        Self::with_string(ErrorKind::ExecError, underlying)
-    }
-}
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+        // Print the error
+        write!(f, "{}: {}", self.kind, self.description)?;
 
-/// A nice typealias for a `Result` with our custom error
-pub type Result<T = ()> = result::Result<T, ErrorImpl<ErrorKind>>;
+        // Print the backtrace
+        if self.backtrace.status() == BacktraceStatus::Captured {
+            writeln!(f)?;
+            writeln!(f, "Backtrace:")?;
+            write!(f, "{}", self.backtrace)?;
+        }
+        Ok(())
+    }
+}
+impl std::error::Error for Error {
+    // No members to override
+}
+impl From<std::io::Error> for Error {
+    fn from(underlying: std::io::Error) -> Self {
+        Self::new(ErrorKind::InOutError, underlying)
+    }
+}

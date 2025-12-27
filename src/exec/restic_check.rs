@@ -1,24 +1,26 @@
 use crate::config::Config;
-use crate::error::Result;
-use ezexec::ExecBuilder;
+use crate::error::Error;
+use crate::exec::CommandExt;
+use std::process::Command;
 
 /// Checks the repository consistency
 #[derive(Debug)]
 pub struct ResticCheck {
     /// The underlying generic executable
-    exec: ExecBuilder,
+    command: Command,
 }
 impl ResticCheck {
     /// Creates a command to check the repository consistency
-    pub fn new(config: &Config) -> Result<Self> {
-        let mut exec = ExecBuilder::with_name("restic", ["check", "--read-data"])?;
-        exec.set_envs(config.to_env()?);
+    pub fn new(config: &Config) -> Result<Self, Error> {
+        let mut command = Command::new("restic");
+        command.arg("check").arg("--read-data");
+        command.envs(config.to_env()?);
 
-        Ok(Self { exec })
+        Ok(Self { command })
     }
 
     /// Checks the repository consistency
-    pub fn exec(self) -> Result {
-        Ok(self.exec.spawn_transparent()?.wait()?)
+    pub fn exec(mut self) -> Result<(), Error> {
+        self.command.exit0()
     }
 }

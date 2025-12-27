@@ -1,24 +1,27 @@
-use crate::error::Result;
-use ezexec::ExecBuilder;
+use crate::error::Error;
+use crate::exec::CommandExt;
+use std::process::Command;
 
 /// A information dialog
 #[derive(Debug)]
 pub struct DialogInfo {
     /// The underlying generic executable
-    exec: ExecBuilder,
+    command: Command,
 }
 impl DialogInfo {
     /// Creates a new information dialog command
-    pub fn new<T>(message: T) -> Result<Self>
+    pub fn new<T>(message: T) -> Result<Self, Error>
     where
         T: AsRef<str>,
     {
-        let exec = ExecBuilder::with_name("dialog", ["--stdout", "--infobox", message.as_ref(), "0", "0"])?;
-        Ok(Self { exec })
+        let mut command = Command::new("dialog");
+        command.arg("--stdout").arg("--infobox").arg(message.as_ref()).arg("0").arg("0");
+
+        Ok(Self { command })
     }
 
     /// Shows the information dialog
-    pub fn exec(self) -> Result {
-        Ok(self.exec.spawn_transparent()?.wait()?)
+    pub fn exec(mut self) -> Result<(), Error> {
+        self.command.exit0()
     }
 }

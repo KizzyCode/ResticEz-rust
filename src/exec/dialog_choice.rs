@@ -1,43 +1,37 @@
-use crate::error::Result;
-use ezexec::ExecBuilder;
-use std::convert::TryInto;
+use crate::error::Error;
+use crate::exec::CommandExt;
+use std::process::Command;
 
 /// A choice dialogue
 #[derive(Debug)]
 pub struct DialogChoice {
     /// The underlying generic executable
-    exec: ExecBuilder,
+    command: Command,
 }
 impl DialogChoice {
     /// Creates a new choice dialog command
-    pub fn new<M, O, OSA, OSB>(message: M, options: O) -> Result<Self>
+    pub fn new<M, O, OSA, OSB>(message: M, options: O) -> Result<Self, Error>
     where
         M: ToString,
         O: IntoIterator<Item = (OSA, OSB)>,
         OSA: ToString,
         OSB: ToString,
     {
-        // Build the CLI options
-        let mut args = vec![
-            "--clear".to_string(),
-            "--stdout".to_string(),
-            "--menu".to_string(),
-            message.to_string(),
-            "0".to_string(),
-            "0".to_string(),
-            "0".to_string(),
-        ];
+        // Initialize the dialog command
+        let mut command = Command::new("dialog");
+        command.arg("--clear").arg("--stdout").arg("--menu").arg(message.to_string()).arg("0").arg("0").arg("0");
         for (tag, desc) in options {
-            args.push(tag.to_string());
-            args.push(desc.to_string());
+            // Append tags and descriptions
+            command.arg(tag.to_string());
+            command.arg(desc.to_string());
         }
 
         // Create the executable
-        Ok(Self { exec: ExecBuilder::with_name("dialog", args)? })
+        Ok(Self { command })
     }
 
     /// Shows the menu dialog and captures the input as string
-    pub fn exec(self) -> Result<String> {
-        Ok(self.exec.spawn_captured()?.try_into()?)
+    pub fn exec(mut self) -> Result<String, Error> {
+        self.command.stdout0()
     }
 }
