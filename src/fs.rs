@@ -48,5 +48,5 @@ where
     P: AsRef<Path>,
 {
     let bytes = fs::read(path)?;
-    String::from_utf8(bytes).map_err(|e| einval!("Non-UTF-8 bytes in string ({})", e))
+    String::from_utf8(bytes).map_err(|e| einval!("Non-UTF-8 bytes in string: {e}"))
 }

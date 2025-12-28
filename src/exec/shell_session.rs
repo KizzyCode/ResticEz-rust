@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::Error;
-use crate::exec::{CommandExt, CommandOsExt};
+use crate::exec::{CommandExt, CommandOsExt, Exec};
 use std::process::Command;
 
 /// Opens a `shell` session with the given environment set
@@ -19,9 +19,11 @@ impl ShellSession {
 
         Ok(Self { command })
     }
+}
+impl Exec for ShellSession {
+    type Output = ();
 
-    /// Creates the shell session
-    pub fn exec(mut self) -> Result<(), Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         eprintln!();
         eprintln!("======= Spawning new subshell: =======");
         self.command.exit0()

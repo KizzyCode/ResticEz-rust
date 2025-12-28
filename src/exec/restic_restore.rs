@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use std::process::Command;
 
 /// Restores the latest snapshot
@@ -26,9 +26,11 @@ impl ResticRestore {
 
         Ok(Self { command })
     }
+}
+impl Exec for ResticRestore {
+    type Output = ();
 
-    /// Creates the backup/snapshot
-    pub fn exec(mut self) -> Result<(), Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         self.command.exit0()
     }
 }

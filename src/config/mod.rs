@@ -1,11 +1,11 @@
-mod dynamic_argument;
+mod dynamicarg;
 
 use crate::error::Error;
-pub use dynamic_argument::DynamicArgument;
-use serde::{Deserialize, Serialize};
+pub use dynamicarg::DynamicArgument;
+use serde::Deserialize;
 
 /// The S3 credentials
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct S3Creds {
     /// The S3 key ID
     pub id: DynamicArgument,
@@ -13,7 +13,7 @@ pub struct S3Creds {
     pub secret: DynamicArgument,
 }
 /// Credentials
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Credentials {
     /// Restic encryption credentials
     pub restic: DynamicArgument,
@@ -22,14 +22,14 @@ pub struct Credentials {
 }
 
 /// The raw restic flags to pass during invocation
-#[derive(Debug, Serialize, Deserialize, Default)]
+#[derive(Debug, Deserialize, Default)]
 pub struct Flags {
     /// The flags to pass during invocation of `restic backup ...`
     #[serde(default)]
     pub backup: Vec<String>,
 }
 /// The restic configuration
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Restic {
     /// The managed directories
     pub dirs: Vec<String>,
@@ -43,13 +43,25 @@ pub struct Restic {
     pub flags: Flags,
 }
 
+/// Custom commands
+#[derive(Debug, Deserialize, Default)]
+pub struct Commands {
+    /// Pre-exec commands
+    pub preexec: Vec<String>,
+    /// Post-exec commands
+    pub postexec: Vec<String>,
+}
+
 /// The restic-ez configuration
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Config {
     /// The restic config
     pub restic: Restic,
     /// Storage credentials
     pub credentials: Credentials,
+    /// Custom commands
+    #[serde(default)]
+    pub commands: Commands,
 }
 impl Config {
     /// Loads the config
@@ -57,7 +69,7 @@ impl Config {
     where
         T: AsRef<str>,
     {
-        let config = toml::from_str(config.as_ref()).map_err(|e| einval!("Invalid config ({})", e))?;
+        let config = toml::from_str(config.as_ref()).map_err(|e| einval!("Invalid config: {e}"))?;
         Ok(config)
     }
 

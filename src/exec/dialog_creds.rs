@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use std::process::Command;
 
 /// A credentials dialogue
@@ -25,9 +25,11 @@ impl DialogCreds {
 
         Ok(Self { command })
     }
+}
+impl Exec for DialogCreds {
+    type Output = String;
 
-    /// Shows the credentials dialog and captures the input as string
-    pub fn exec(mut self) -> Result<String, Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         self.command.stdout0()
     }
 }

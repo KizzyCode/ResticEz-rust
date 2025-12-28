@@ -78,7 +78,7 @@ fn main() {
     // Execute the main block or pretty-print the error
     if let Err(err) = _main() {
         eprintln!();
-        eprintln!("Error: {}", err);
+        eprintln!("Error: {err}");
         process::exit(1);
     }
 }

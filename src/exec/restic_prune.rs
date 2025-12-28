@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use std::process::Command;
 
 /// Prunes all unused chunks from the repository
@@ -18,9 +18,11 @@ impl ResticPrune {
 
         Ok(Self { command })
     }
+}
+impl Exec for ResticPrune {
+    type Output = ();
 
-    /// Prunes all unused chunks from the repository
-    pub fn exec(mut self) -> Result<(), Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         self.command.exit0()
     }
 }

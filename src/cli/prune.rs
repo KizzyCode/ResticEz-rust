@@ -1,21 +1,22 @@
+use crate::cli::Command;
 use crate::config::Config;
 use crate::error::Error;
+use crate::exec::Exec;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_prune::ResticPrune;
 
 /// Prunes all unused chunks from the repository
+#[derive(Debug)]
 pub struct Prune {
     /// The config
     config: Config,
 }
-impl Prune {
-    /// Creates a command to prune all unused chunks from the repository
-    pub const fn new(config: Config) -> Self {
+impl Command for Prune {
+    fn new(config: Config) -> Self {
         Self { config }
     }
 
-    /// Executes the command
-    pub fn exec(self) -> Result<(), Error> {
+    fn exec(self) -> Result<(), Error> {
         DialogInfo::new("Pruning unused chunks...")?.exec()?;
         ResticPrune::new(&self.config)?.exec()
     }

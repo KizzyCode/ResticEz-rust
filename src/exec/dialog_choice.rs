@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use std::process::Command;
 
 /// A choice dialogue
@@ -29,9 +29,11 @@ impl DialogChoice {
         // Create the executable
         Ok(Self { command })
     }
+}
+impl Exec for DialogChoice {
+    type Output = String;
 
-    /// Shows the menu dialog and captures the input as string
-    pub fn exec(mut self) -> Result<String, Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         self.command.stdout0()
     }
 }

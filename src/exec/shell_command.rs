@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::exec::CommandOsExt;
+use crate::exec::{CommandOsExt, Exec};
 use std::process::Command;
 
 /// Executes a shell command
@@ -17,9 +17,11 @@ impl ShellCommand {
         let command = command.to_string();
         Ok(Self { command })
     }
+}
+impl Exec for ShellCommand {
+    type Output = String;
 
-    /// Runs the executable command and captures stdout as string
-    pub fn exec(self) -> Result<String, Error> {
+    fn exec(self) -> Result<Self::Output, Error> {
         Command::shell_stdout0(&self.command)
     }
 }

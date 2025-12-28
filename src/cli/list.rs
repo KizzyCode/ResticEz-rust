@@ -1,5 +1,7 @@
+use crate::cli::Command;
 use crate::config::Config;
 use crate::error::Error;
+use crate::exec::Exec;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_list::ResticList;
 
@@ -25,7 +27,8 @@ impl TableFormatter {
         // Validate the amount of fields
         let mut fields: Vec<_> = row.into_iter().map(|f| f.to_string()).collect();
         if fields.len() != self.columns {
-            Err(einval!("Invalid amount of fields in row (expected {}; got {})", self.columns, fields.len()))?;
+            // Note: This should not happen normally
+            Err(einval!("Invalid amount of fields in row (expected: {}; got: {})", self.columns, fields.len()))?;
         }
 
         // Append the fields
@@ -69,18 +72,17 @@ impl TableFormatter {
 }
 
 /// Lists all archives
+#[derive(Debug)]
 pub struct List {
     /// The config
     config: Config,
 }
-impl List {
-    /// Creates a command to list all archives
-    pub const fn new(config: Config) -> Self {
+impl Command for List {
+    fn new(config: Config) -> Self {
         Self { config }
     }
 
-    /// Executes the command
-    pub fn exec(self) -> Result<(), Error> {
+    fn exec(self) -> Result<(), Error> {
         // Print the status info
         DialogInfo::new("Listing snapshots...")?.exec()?;
         println!();

@@ -12,7 +12,7 @@ readme = "README.md"
 # Note: If you adjust this, also update:
 #  - HELP.txt
 #  - README.md#man-page
-version = "0.5.0"
+version = "0.5.1"
 
 
 [[bin]]

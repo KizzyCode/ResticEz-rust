@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use std::process::Command;
 
 /// A information dialog
@@ -19,9 +19,11 @@ impl DialogInfo {
 
         Ok(Self { command })
     }
+}
+impl Exec for DialogInfo {
+    type Output = ();
 
-    /// Shows the information dialog
-    pub fn exec(mut self) -> Result<(), Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         self.command.exit0()
     }
 }

@@ -16,6 +16,15 @@ use std::path::Path;
 use std::process::{Command, Stdio};
 use std::{env, iter};
 
+/// An executable step
+pub trait Exec {
+    /// The success-output value
+    type Output;
+
+    /// Executes the step
+    fn exec(self) -> Result<Self::Output, Error>;
+}
+
 /// Extension traits for [`Command`]
 pub(in crate::exec) trait CommandExt {
     /// Drives `self` to completion and expects an exit-status `0`

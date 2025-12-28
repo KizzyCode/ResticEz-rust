@@ -1,4 +1,5 @@
 use crate::error::Error;
+use crate::exec::Exec;
 use crate::exec::dialog_creds::DialogCreds;
 use crate::exec::shell_command::ShellCommand;
 use serde::{Deserialize, Serialize};

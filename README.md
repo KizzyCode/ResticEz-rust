@@ -33,23 +33,35 @@ command = "set -euo pipefail; pass <path to password file> | sed -n 1p"
 [credentials.s3]
 id = { value = "<insert your s3 key id here>" }
 secret = { command = "set -euo pipefail; pass <path to password file> | sed -n 2p" }
+
+[commands]
+preexec = [
+    "touch first-preexec-command",
+    "sleep 3",
+    "touch second-preexec-command",
+]
+postexec = [
+    "touch first-postexec-command",
+    "sleep 3",
+    "touch second-postexec-command",
+]
 ```
 
 ## Man page
 ```
-restic-ez v0.5.0
+restic-ez v0.5.1
 
 Usage: restic-ez [/my/customconfig.toml] [verb]
 
 Verbs:
-    create      Creates a new archive
-    list        Lists the existing archives
-    restore     Restores the latest archiv tagged with \"backup\"
-    shell       Opens a shell session configured for easy manual restic invocation
-    check       Checks the repository for consistency
-    prune       Removes all unused chunks from the repository
-    break-lock  Breaks a stale lock
-    help        Displays this help
+    create   Creates a new archive
+    list     Lists the existing archives
+    restore  Restores the latest archiv tagged with \"backup\"
+    shell    Opens a shell session configured for easy manual restic invocation
+    check    Checks the repository for consistency
+    prune    Removes all unused chunks from the repository
+    unlock   Breaks a stale lock
+    help     Displays this help
 
 Config:
     Explicitly specify the configuration file by passing the path as first argument:

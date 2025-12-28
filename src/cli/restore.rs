@@ -1,5 +1,7 @@
+use crate::cli::Command;
 use crate::config::Config;
 use crate::error::Error;
+use crate::exec::Exec;
 use crate::exec::dialog_confirm::DialogConfirm;
 use crate::exec::dialog_info::DialogInfo;
 use crate::exec::restic_create::ResticCreate;
@@ -7,18 +9,17 @@ use crate::exec::restic_restore::ResticRestore;
 use crate::fs;
 
 /// Restores the latest archive which contains both tag "backup" and the managed path from the configuration
+#[derive(Debug)]
 pub struct Restore {
     /// The config
     config: Config,
 }
-impl Restore {
-    /// Creates a command to push a new backup
-    pub const fn new(config: Config) -> Self {
+impl Command for Restore {
+    fn new(config: Config) -> Self {
         Self { config }
     }
 
-    /// Executes the command
-    pub fn exec(self) -> Result<(), Error> {
+    fn exec(self) -> Result<(), Error> {
         // Check if one of the target directories exist
         let mut exists = false;
         for dir in self.config.restic.dirs.iter() {
@@ -41,7 +42,7 @@ impl Restore {
         if exists {
             let dirs = self.config.restic.dirs.join("\n");
             DialogConfirm::new(
-                format!("Really delete everything within the following directories before restoration?\n\n{}", dirs),
+                format!("Really delete everything within the following directories before restoration?\n\n{dirs}"),
                 "Delete everything and restore",
                 "Cancel",
             )?
@@ -51,7 +52,7 @@ impl Restore {
         // Remove all contents from the target directories
         for dir in self.config.restic.dirs.iter() {
             if fs::dir_exists(dir)? && !fs::dir_is_empty(dir)? {
-                DialogInfo::new(format!("Deleting everything within {}...", dir))?.exec()?;
+                DialogInfo::new(format!("Deleting everything within {dir}..."))?.exec()?;
                 fs::clear_dir(dir)?;
             }
         }

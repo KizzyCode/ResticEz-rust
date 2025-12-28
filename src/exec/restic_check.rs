@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use std::process::Command;
 
 /// Checks the repository consistency
@@ -18,9 +18,11 @@ impl ResticCheck {
 
         Ok(Self { command })
     }
+}
+impl Exec for ResticCheck {
+    type Output = ();
 
-    /// Checks the repository consistency
-    pub fn exec(mut self) -> Result<(), Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         self.command.exit0()
     }
 }

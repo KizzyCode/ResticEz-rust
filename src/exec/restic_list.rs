@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 
@@ -39,10 +39,12 @@ impl ResticList {
 
         Ok(Self { command })
     }
+}
+impl Exec for ResticList {
+    type Output = ResticListOutput;
 
-    /// Lists the repository archives
-    pub fn exec(mut self) -> Result<ResticListOutput, Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         let output_json: String = self.command.stdout0()?;
-        serde_json::from_str(&output_json).map_err(|e| einval!("Unexpected JSON output from `restic` command ({})", e))
+        serde_json::from_str(&output_json).map_err(|e| einval!("Unexpected JSON output from `restic` command: {e}"))
     }
 }

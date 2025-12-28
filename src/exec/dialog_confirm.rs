@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::exec::CommandExt;
+use crate::exec::{CommandExt, Exec};
 use std::process::Command;
 
 /// A confirmation dialog
@@ -30,9 +30,11 @@ impl DialogConfirm {
 
         Ok(Self { command })
     }
+}
+impl Exec for DialogConfirm {
+    type Output = ();
 
-    /// Shows the confirmation dialog
-    pub fn exec(mut self) -> Result<(), Error> {
+    fn exec(mut self) -> Result<Self::Output, Error> {
         self.command.exit0()
     }
 }
