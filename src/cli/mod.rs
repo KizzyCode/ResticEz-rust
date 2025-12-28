@@ -18,7 +18,7 @@ use crate::cli::shell::Shell;
 use crate::config::Config;
 use crate::error::Error;
 use crate::exec::dialog_choice::DialogChoice;
-use std::env;
+use std::iter::Peekable;
 
 /// A CLI command processor
 #[derive(Debug)]
@@ -30,8 +30,11 @@ pub struct CliCommand {
 }
 impl CliCommand {
     /// Creates a new CLI command processor
-    pub fn new(config: Config) -> Self {
-        Self { verb: env::args().skip(1).next(), config }
+    pub fn new<Argv>(config: Config, argv: &mut Peekable<Argv>) -> Self
+    where
+        Argv: Iterator<Item = String>,
+    {
+        Self { verb: argv.next(), config }
     }
 
     /// Executes the CLI command

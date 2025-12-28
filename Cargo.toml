@@ -1,6 +1,5 @@
 [package]
 name = "restic_ez"
-version = "0.4.1"
 edition = "2024"
 authors = ["KizzyCode Software Labs./Keziah Biermann <development@kizzycode.de>"]
 keywords = []
@@ -9,6 +8,11 @@ description = "This crate provides a simple configuration loader and API around 
 license = "BSD-2-Clause OR MIT"
 repository = "https://github.com/KizzyCode/ResticEz-rust"
 readme = "README.md"
+
+# Note: If you adjust this, also update:
+#  - HELP.txt
+#  - README.md#man-page
+version = "0.5.0"
 
 
 [[bin]]

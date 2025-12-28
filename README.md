@@ -37,9 +37,11 @@ secret = { command = "set -euo pipefail; pass <path to password file> | sed -n 2
 
 ## Man page
 ```
-Usage: restic-ez [verb]
+restic-ez v0.5.0
 
-Possible verbs are:
+Usage: restic-ez [/my/customconfig.toml] [verb]
+
+Verbs:
     create      Creates a new archive
     list        Lists the existing archives
     restore     Restores the latest archiv tagged with \"backup\"
@@ -49,15 +51,18 @@ Possible verbs are:
     break-lock  Breaks a stale lock
     help        Displays this help
 
-Specify the configuration using environment variables:
-    RESTIC_EZ_CONFIG_TOML  Specifies the raw configuration toml string
-    RESTIC_EZ_CONFIG       Specifies a custom path to a configuration file
+Config:
+    Explicitly specify the configuration file by passing the path as first argument:
+        /my/customconfig.toml  An explicit path to a *.toml configuration file
+        /my/customconfig.conf  An explicit path to a *.conf configuration file
 
-Per default, restic-ez looks for the following config files:
-    ./restic-ez
-    ./restic-ez.conf
-    ./restic-ez.toml
-    ./.restic-ez
-    ./.restic-ez.conf
-    ./.restic-ez.toml
+    Explicitly specify the configuration using environment variables:
+        RESTIC_EZ_CONFIG_TOML  Specifies the raw configuration toml string
+        RESTIC_EZ_CONFIG       Specifies a custom path to a configuration file
+
+    Per default, restic-ez looks for the following configuration files:
+        ./restic-ez.conf
+        ./restic-ez.toml
+        ./.restic-ez.conf
+        ./.restic-ez.toml
 ```
